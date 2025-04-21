@@ -81,7 +81,7 @@ javascript:(function(){if(window._chomojiCountActive)return;window._chomojiCount
 
 ### Usage
 
-1. On the web page where you want to count characters, click on "Cho-Moji Counter" in your bookmark bar
+1. On the web page where you want to count characters, click on "Chomoji Count" in your bookmark bar
 2. Select text on the page
 3. A popup will appear in the bottom right corner displaying the character counts
 4. When you select different text, the counts will automatically update
