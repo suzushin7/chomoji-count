@@ -1,4 +1,3 @@
-// テキスト文字数カウンターブックマークレット（改行判定再修正版）
 (function() {
   // すでに実行中かチェック
   if (window._chomojiCountActive) {
@@ -8,14 +7,16 @@
   // アクティブフラグの設定
   window._chomojiCountActive = true;
   
+  // マウス位置を追跡する変数
+  let mouseX = 0;
+  let mouseY = 0;
+  
   // スタイルの追加
   const style = document.createElement("style");
   style.id = "text-counter-style";
   style.textContent = `
     #text-counter-popup {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
+      position: absolute;
       background-color: #333;
       color: white;
       padding: 10px 15px;
@@ -48,86 +49,76 @@
   popup.id = "text-counter-popup";
   popup.innerHTML = `
     <table>
-      <tr><td>テキスト:</td><td id="text-only-count">0</td></tr>
-      <tr><td>+改行:</td><td id="with-newlines-count">0</td></tr>
-      <tr><td>+改行+空白:</td><td id="with-spaces-count">0</td></tr>
+      <tr><td>文字数:</td><td id="text-only-count">0</td></tr>
+      <tr><td>＋改行:</td><td id="with-newlines-count">0</td></tr>
     </table>
   `;
   document.body.appendChild(popup);
   
-  // HTMLタグを削除する関数
-  function stripHtml(html) {
-    const tmp = document.createElement("div");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+  // HTMLタグを削除し、改行を保持する関数
+  function getSelectedText() {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return "";
+    
+    // 選択範囲を直接テキストとして取得
+    const selectedText = selection.toString();
+    return selectedText;
+  }
+  
+  // ポップアップを非表示にする関数
+  function hidePopup() {
+    popup.classList.remove("active");
   }
   
   // カウント計算関数
   function updateCount() {
     const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      // 選択範囲のテキストを取得
-      const range = selection.getRangeAt(0);
-      const fragment = range.cloneContents();
-      const div = document.createElement("div");
-      div.appendChild(fragment);
+    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+      // 選択テキストを取得（改行を保持）
+      const plainText = getSelectedText();
       
-      // HTMLタグを除去したテキスト
-      const plainText = stripHtml(div.innerHTML);
+      // 「文字数」のカウント - 改行のみを取り除く
+      const withoutNewlines = plainText.replace(/[\r\n]+/g, "");
+      const textOnlyCount = withoutNewlines.length;
       
-      // テキストの内容を解析
-      const textOnly = plainText.replace(/[\n\r\t\f\v ]/g, "");
-      const textWithNewlines = plainText.replace(/[ \t\f\v]/g, "");
-      
-      // 各カウントの計算（修正版）
-      const textOnlyCount = textOnly.length; // 全ての空白文字を削除
-      const withNewlinesCount = textWithNewlines.length; // 改行以外の空白を削除
-      const withSpacesCount = plainText.length; // すべて含む
+      // 「＋改行」のカウント - すべての文字を含む
+      const withNewlinesCount = plainText.length;
       
       // 結果の表示
       document.getElementById("text-only-count").textContent = textOnlyCount;
       document.getElementById("with-newlines-count").textContent = withNewlinesCount;
-      document.getElementById("with-spaces-count").textContent = withSpacesCount;
       
-      // デバッグ情報の追加（開発時用）
-      console.log({
-        "テキスト": textOnly,
-        "+改行": textWithNewlines,
-        "+改行+空白": plainText,
-        "改行文字数": (textWithNewlines.length - textOnly.length)
-      });
+      // マウス位置の直下にポップアップを表示
+      popup.style.left = mouseX + "px";
+      popup.style.top = (mouseY + 10) + "px";
       
       // ポップアップを表示
       popup.classList.add("active");
     } else {
-      // 選択がない場合はポップアップを非表示
-      popup.classList.remove("active");
+      // 選択がない/キャンセルされた場合は即座に非表示に
+      hidePopup();
     }
   }
   
-  // マウスアップイベントでカウント更新
-  document.addEventListener("mouseup", updateCount);
+  // マウス移動イベントでマウス位置を更新
+  document.addEventListener("mousemove", function(e) {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+  });
   
-  // キーアップイベントでもカウント更新（キーボード選択のため）
-  document.addEventListener("keyup", function(e) {
-    // 矢印キー、Shift、Ctrl、Home、Endなどの選択に関わるキーのみ対象に
-    const selectionKeys = [
-      "ArrowUp",
-      "ArrowDown",
-      "ArrowLeft",
-      "ArrowRight",
-      "Home",
-      "End",
-      "PageUp",
-      "PageDown",
-      "Shift",
-      "Control",
-      "Meta",
-      "Alt",
-    ];
-    if (selectionKeys.includes(e.key)) {
-      updateCount();
-    }
+  // マウスアップイベントでカウント更新
+  document.addEventListener("mouseup", function(e) {
+    // マウス位置を更新してからカウント更新
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+    
+    // 少し遅延させてカウント更新（選択完了を待つため）
+    setTimeout(updateCount, 10);
+  });
+  
+  // 選択変更イベントでもカウント更新
+  document.addEventListener("selectionchange", function() {
+    updateCount();
   });
   
   // 初期実行
