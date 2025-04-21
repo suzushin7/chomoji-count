@@ -9,17 +9,16 @@
 
 ### 概要
 
-「ちょ文字カウント」は、ウェブページ上で選択したテキストの文字数をリアルタイムでカウントするシンプルなブックマークレットです。テキスト選択後、画面右下にポップアップが表示され、3種類の文字数カウントが表示されます。
+「ちょ文字カウント」は、ウェブページ上で選択したテキストの文字数をリアルタイムでカウントするシンプルなブックマークレットです。テキスト選択後、マウスカーソルの直下にポップアップが表示され、2種類の文字数カウントが表示されます。
 
 ### 機能
 
 - テキストを選択するだけで自動的に文字数をカウント
-- 以下の3種類のカウントを表示：
-  - テキスト：スペースや改行を除いた純粋な文字数
-  - +改行：改行を含むが、スペースを除いた文字数
-  - +改行+空白：すべての文字、改行、スペースを含む総文字数
-- HTMLタグは自動的に除去されるため、ウェブページ上のどのようなコンテンツでも正確にカウント可能
-- 一度アクティブにすると、その後のテキスト選択時に自動的にカウント表示
+- 以下の2種類のカウントを表示：
+  - 文字数：改行を除いた文字数
+  - ＋改行：改行を含むすべての文字数
+- 選択が解除されると自動的にポップアップが非表示に
+- マウスカーソルの直下に表示されるため、見やすい位置でカウントを確認可能
 
 ### インストール方法
 
@@ -39,8 +38,9 @@ javascript:(function(){if(window._chomojiCountActive)return;window._chomojiCount
 
 1. 文字数をカウントしたいウェブページで、ブックマークバーから「ちょ文字カウント」をクリックします
 2. ページ上のテキストを選択します
-3. 画面右下にポップアップが表示され、テキストの文字数が表示されます
+3. マウスカーソルの直下にポップアップが表示され、テキストの文字数が表示されます
 4. 別のテキストを選択すると、カウントが自動的に更新されます
+5. 選択を解除すると、ポップアップは自動的に非表示になります
 
 ### 注意事項
 
@@ -53,17 +53,16 @@ javascript:(function(){if(window._chomojiCountActive)return;window._chomojiCount
 
 ### Overview
 
-"Chomoji Count" is a simple bookmarklet that counts the number of characters in selected text on web pages in real-time. After selecting text, a popup appears in the bottom right corner of the screen displaying three different character counts.
+"Chomoji Count" is a simple bookmarklet that counts the number of characters in selected text on web pages in real-time. After selecting text, a popup appears below the mouse cursor displaying two different character counts.
 
 ### Features
 
 - Automatically counts characters as soon as text is selected
-- Displays three types of counts:
-  - Text only: Pure character count excluding spaces and line breaks
-  - +Line breaks: Character count including line breaks but excluding spaces
-  - +Line breaks+Spaces: Total count including all characters, line breaks, and spaces
-- HTML tags are automatically removed, ensuring accurate counts for any content on web pages
-- Once activated, it automatically displays counts for subsequent text selections
+- Displays two types of counts:
+  - Character count: Number of characters excluding line breaks
+  - +Line breaks: Total number of characters including line breaks
+- Popup automatically hides when text selection is cleared
+- Appears below the mouse cursor for easy viewing
 
 ### Installation
 
@@ -83,8 +82,9 @@ javascript:(function(){if(window._chomojiCountActive)return;window._chomojiCount
 
 1. On the web page where you want to count characters, click on "Chomoji Count" in your bookmark bar
 2. Select text on the page
-3. A popup will appear in the bottom right corner displaying the character counts
+3. A popup will appear below your mouse cursor displaying the character counts
 4. When you select different text, the counts will automatically update
+5. When you clear the selection, the popup will automatically hide
 
 ### Notes
 
