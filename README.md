@@ -53,7 +53,7 @@ javascript:(function(){if(window._chomojiCountActive)return;window._chomojiCount
 
 ### Overview
 
-"Cho-Moji Counter" is a simple bookmarklet that counts the number of characters in selected text on web pages in real-time. After selecting text, a popup appears in the bottom right corner of the screen displaying three different character counts.
+"Chomoji Count" is a simple bookmarklet that counts the number of characters in selected text on web pages in real-time. After selecting text, a popup appears in the bottom right corner of the screen displaying three different character counts.
 
 ### Features
 
@@ -75,7 +75,7 @@ javascript:(function(){if(window._chomojiCountActive)return;window._chomojiCount
 
 2. Display your browser's bookmark bar (in Chrome, press `Ctrl+Shift+B` or `⌘+Shift+B`)
 3. Right-click on an empty area of the bookmark bar and select "Add page" or "New bookmark"
-4. Enter "Cho-Moji Counter" as the name
+4. Enter "Chomoji Count" as the name
 5. Paste the copied code into the URL field
 6. Click "Save"
 
