@@ -1,4 +1,4 @@
-// テキスト文字数カウンターブックマークレット（改行判定修正版）
+// テキスト文字数カウンターブックマークレット（改行判定再修正版）
 (function() {
   // すでに実行中かチェック
   if (window._chomojiCountActive) {
@@ -75,15 +75,27 @@
       // HTMLタグを除去したテキスト
       const plainText = stripHtml(div.innerHTML);
       
+      // テキストの内容を解析
+      const textOnly = plainText.replace(/[\n\r\t\f\v ]/g, "");
+      const textWithNewlines = plainText.replace(/[ \t\f\v]/g, "");
+      
       // 各カウントの計算（修正版）
-      const textOnlyCount = plainText.replace(/[\n\r\t\f\v ]/g, "").length; // 全ての空白文字を削除
-      const withNewlinesCount = plainText.replace(/[ \t\f\v]/g, "").length; // 改行以外の空白を削除
+      const textOnlyCount = textOnly.length; // 全ての空白文字を削除
+      const withNewlinesCount = textWithNewlines.length; // 改行以外の空白を削除
       const withSpacesCount = plainText.length; // すべて含む
       
       // 結果の表示
       document.getElementById("text-only-count").textContent = textOnlyCount;
       document.getElementById("with-newlines-count").textContent = withNewlinesCount;
       document.getElementById("with-spaces-count").textContent = withSpacesCount;
+      
+      // デバッグ情報の追加（開発時用）
+      console.log({
+        "テキスト": textOnly,
+        "+改行": textWithNewlines,
+        "+改行+空白": plainText,
+        "改行文字数": (textWithNewlines.length - textOnly.length)
+      });
       
       // ポップアップを表示
       popup.classList.add("active");
