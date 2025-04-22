@@ -50,6 +50,20 @@
   `;
   document.body.appendChild(popup);
   
+  function countChars(str) {
+    if (typeof Intl !== 'undefined' && typeof Intl.Segmenter !== 'undefined') {
+      try {
+        const segmenter = new Intl.Segmenter('ja', { granularity: 'grapheme' });
+        const segments = segmenter.segment(str);
+        return [...segments].length;
+      } catch (e) {
+        console.log("Segmenter Error:", e);
+      }
+    }
+    
+    return Array.from(str).length;
+  }
+  
   function getSelectedText() {
     const selection = window.getSelection();
     if (!selection.rangeCount) return "";
@@ -66,9 +80,11 @@
     const selection = window.getSelection();
     if (selection.rangeCount > 0 && !selection.isCollapsed) {
       const plainText = getSelectedText();
+      
       const withoutNewlines = plainText.replace(/[\r\n]+/g, "");
-      const textOnlyCount = withoutNewlines.length;
-      const withNewlinesCount = plainText.length;
+      const textOnlyCount = countChars(withoutNewlines);
+      
+      const withNewlinesCount = countChars(plainText);
       
       document.getElementById("text-only-count").textContent = textOnlyCount;
       document.getElementById("with-newlines-count").textContent = withNewlinesCount;
